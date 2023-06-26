@@ -32,3 +32,5 @@ GROUP BY sales.customer_id
 | A           | $76         |
 | B           | $74         |
 | C           | $36         |
+
+***
