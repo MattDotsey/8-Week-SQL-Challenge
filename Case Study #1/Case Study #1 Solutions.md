@@ -17,14 +17,14 @@
 
 ###  1. What is the total amount each customer spent at the restaurant?
 
-'''sql
+```sql
 SELECT customer_id,
 SUM(price) 
 FROM sales
 LEFT JOIN menu
 ON sales.product_id = menu.product_id
 GROUP BY sales.customer_id
-'''
+```
 
 #### Result set:
 | customer_id | total_sales |
