@@ -1,5 +1,33 @@
 ## Data Cleaning
-'''Before you start writing your SQL queries however - you might want to investigate the data, you may want to do something with some of those null values and data types in the customer_orders and runner_orders tables!'''
+
+The case study mentions that there were some issues with the tables, including various different kinds of null values (empty fields, 'null' in string format, and NULL values) 
+
+The following queries were attempts to clean up those null values.
+
+### customer_orders
+
+```sql
+DROP TABLE IF EXISTS customer_orders_temp;
+CREATE TABLE customer_orders_temp AS SELECT order_id,
+    customer_id,
+    pizza_id,
+    CASE
+        WHEN
+            exclusions = 'null'
+                OR exclusions IS NULL
+        THEN
+            ''
+        ELSE exclusions
+    END AS exclusions,
+    CASE
+        WHEN extras = 'null' OR exclusions IS NULL THEN ''
+        ELSE extras
+    END AS extras FROM
+    customer_orders;
+```
+
+### runner_orders
+
 ```sql
 DROP TABLE IF EXISTS runner_orders_temp;
 CREATE TABLE runner_orders_temp AS SELECT order_id,
