@@ -150,7 +150,51 @@ WHERE
 | 10         | 1         | 10.00       | 0.17        | 60.00                 |
 #### 7. What is the successful delivery percentage for each runner?
 
-```sql
+Personally I wouldn't consider a restaurant cancellation or a customer cancellation an "unsuccessful delivery", seems unfair to the driver. But I will assume that both of those count as unsuccessful deliveries. 
 
+##### single query (hard to read)
+```sql
+SELECT 
+    runner_id,
+    SUM(CASE
+        WHEN cancellation = '' THEN 1
+        ELSE 0
+    END) AS delivery_successful,
+    COUNT(*) AS total_orders,
+    ROUND(SUM(CASE
+                WHEN cancellation = '' THEN 1
+                ELSE 0
+            END) / COUNT(*) * 100,
+            1) AS successful_delivery_pct
+FROM
+    runner_orders_temp
+GROUP BY runner_id
+```
+
+##### Easier to follow (with CTE)
+```sql
+WITH success_tracker AS (
+  SELECT 
+      runner_id,
+      SUM(CASE
+          WHEN cancellation = '' THEN 1
+          ELSE 0
+      END) AS delivery_successful,
+      COUNT(*) AS total_orders
+  FROM
+      runner_orders_temp
+  GROUP BY runner_id
+  )
+SELECT runner_id,
+	   delivery_successful,
+       total_orders,
+       delivery_successful / total_orders AS successful_delievry_pct
+FROM success_tracker
+GROUP BY runner_id
 ```
 ##### Result Table:
+|   runner_id | delivery_successful | total_orders | successful_delievry_pct |
+|-------------|---------------------|--------------|-------------------------|
+| 1           | 4                   | 4            | 1.0000                  |
+| 2           | 3                   | 4            | 0.7500                  |
+| 3           | 1                   | 2            | 0.5000                  |
