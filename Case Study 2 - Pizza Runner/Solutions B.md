@@ -185,15 +185,17 @@ WITH success_tracker AS (
       runner_orders_temp
   GROUP BY runner_id
   )
-SELECT runner_id,
-	   delivery_successful,
-       total_orders,
-       delivery_successful / total_orders AS successful_delievry_pct
-FROM success_tracker
+SELECT 
+    runner_id,
+    delivery_successful,
+    total_orders,
+    delivery_successful / total_orders AS successful_delivery_pct
+FROM
+    success_tracker
 GROUP BY runner_id
 ```
 ##### Result Table:
-|   runner_id | delivery_successful | total_orders | successful_delievry_pct |
+|   runner_id | delivery_successful | total_orders | successful_delivery_pct |
 |-------------|---------------------|--------------|-------------------------|
 | 1           | 4                   | 4            | 1.0000                  |
 | 2           | 3                   | 4            | 0.7500                  |
